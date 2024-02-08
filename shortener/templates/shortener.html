@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>URL Shortner</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+      
+      .container {
+        text-align: center;
+      }
+      
+      .container input {
+        width: 300px;
+        height: 30px;
+        padding: 5px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+      
+      .container button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: #fff;
+        font-size: 14px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <input type="text" id="urlInput" placeholder="Enter URL" />
+      <button onclick="handleButtonClick()">Submit</button>
+    </div>
+    <script>
+      function handleButtonClick() {
+        let inputValue = document.getElementById('urlInput').value
+        let token = '{{ csrf_token }}'
+        let formData = new FormData()
+        formData.append('url', inputValue)
+        formData.append('csrfmiddlewaretoken', token)
+        fetch('/shortener/', {
+          method: 'POST',
+          body: formData
+        })
+      }
+    </script>
+  </body>
+</html>
