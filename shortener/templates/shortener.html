@@ -37,12 +37,13 @@
     </style>
   </head>
   <body>
-    <div class="container">
-      <input type="text" id="urlInput" placeholder="Enter URL" />
+    <div id="test"></div>
+    <form class="container">
+      <input type="text" id="urlInput" placeholder="Enter URL" required/>
       <button onclick="handleButtonClick()">Submit</button>
-    </div>
+    </form>
     <script>
-      function handleButtonClick() {
+      async function handleButtonClick() {
         let inputValue = document.getElementById('urlInput').value
         let token = '{{ csrf_token }}'
         let formData = new FormData()
@@ -51,6 +52,11 @@
         fetch('/shortener/', {
           method: 'POST',
           body: formData
+        }).then(async resp => {
+            let test = document.getElementById('test')
+            respjson = await resp.json()
+            console.log(respjson)
+            test.innerHTML = respjson.error_message
         })
       }
     </script>
