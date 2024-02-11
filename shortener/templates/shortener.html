@@ -38,9 +38,9 @@
   </head>
   <body>
     <div id="test"></div>
-    <form class="container">
+    <form class="container" onsubmit="handleButtonClick(); return false;">
       <input type="text" id="urlInput" placeholder="Enter URL" required/>
-      <button onclick="handleButtonClick()">Submit</button>
+      <button>Submit</button>
     </form>
     <script>
       async function handleButtonClick() {

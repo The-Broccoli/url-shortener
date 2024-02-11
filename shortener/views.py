@@ -11,15 +11,17 @@ def shortener(request):
         # Request data auf vollständigkeit prüfen
         if is_valid_url(request.POST['url']):
             # Ist diese URL dem System schon bekannt?
-            if it_is_a_known_url(request.POST['url']):
+            if not it_is_a_known_url(request.POST['url']):
                 short_url = generate_short_url(request.POST['url'])
                 Urls.objects.create(long_url = request.POST['url'], short_url = short_url)
+                return JsonResponse({'error_message': 'created'})
             else:
                 print('known URL - Request data:', request.POST['url'])
                 return JsonResponse({'error_message': 'A known URL'})
         else:
             print('Invalid URL - Request data:', request.POST['url'])
-            return JsonResponse({'error_message': 'Invalid URL'})
+            x = 'Invalid URL'
+            return JsonResponse({'error_message': x})
     return render(request, 'shortener.html')
 
 def is_valid_url(url):
@@ -39,6 +41,6 @@ def generate_short_url(long_url):
 def it_is_a_known_url(long_url):
     all_urls = Urls.objects.all()
     for url in all_urls:
-        if long_url == url:
+        if long_url == url.long_url:
             return True
     return False
