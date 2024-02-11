@@ -4,6 +4,7 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
+    font-family: 'Open Sans';
   }
   
   .container {
@@ -21,11 +22,54 @@ body {
   }
   
   .container button {
-    padding: 10px 20px;
+    padding: 12px 20px;
     border: none;
     border-radius: 5px;
     background-color: #007bff;
     color: #fff;
     font-size: 14px;
     cursor: pointer;
+  }
+
+  .up {
+    display: flex;
+    gap: 3px;
+  }
+
+  .up h3 {
+    font-weight: 500;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .shorter {
+    text-transform: uppercase;
+    letter-spacing: -2.5px;
+  }
+
+  #result {
+    border: solid 1.5px;
+    border-radius: 7px;
+    padding: 10px;
+    opacity: 1;
+    transition: all ease-in-out 255ms;
+  }
+
+  .error {
+    background-color: #FF7E7E;
+    border-color: #F91818;
+  }
+
+  .success {
+    background-color: #A7C957;
+    border-color: #386641;
+  }
+
+  .invisible {
+    opacity: 0 !important;
+    transition: all ease-in-out 255ms;
   }

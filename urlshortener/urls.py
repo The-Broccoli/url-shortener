@@ -16,9 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from shortener.views import shortener
+from shortener.views import shortener, forward
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('shortener/', shortener),
 ]
+
+handler404 = forward

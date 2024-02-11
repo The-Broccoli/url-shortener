@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Urls
 import base64
 import hashlib
@@ -11,18 +11,28 @@ def shortener(request):
         # Request data auf vollständigkeit prüfen
         if is_valid_url(request.POST['url']):
             # Ist diese URL dem System schon bekannt?
-            if not it_is_a_known_url(request.POST['url']):
+            link = it_is_a_known_url(request.POST['url'])
+            if not link:
                 short_url = generate_short_url(request.POST['url'])
                 Urls.objects.create(long_url = request.POST['url'], short_url = short_url)
-                return JsonResponse({'error_message': 'created'})
+                json = {'success_message': 'created', "short_url": "http://www.otomay.com/" + short_url}
+                return JsonResponse(json)
             else:
                 print('known URL - Request data:', request.POST['url'])
-                return JsonResponse({'error_message': 'A known URL'})
+                json = {'success_message': 'A known URL', 'short_url': "http://www.otomay.com/" + link}
+                return JsonResponse(json)
         else:
             print('Invalid URL - Request data:', request.POST['url'])
             x = 'Invalid URL'
             return JsonResponse({'error_message': x})
     return render(request, 'shortener.html')
+
+def forward(request, exception):
+    result = does_this_forwarding_exist(request.path[1:])
+    if result:
+        return redirect(result)
+    else:
+        return render(request, '404.html')
 
 def is_valid_url(url):
     try:
@@ -42,5 +52,12 @@ def it_is_a_known_url(long_url):
     all_urls = Urls.objects.all()
     for url in all_urls:
         if long_url == url.long_url:
-            return True
+            return url.short_url
+    return False
+    
+def does_this_forwarding_exist(hex_code):
+    all_urls = Urls.objects.all()
+    for url in all_urls:
+        if hex_code == url.short_url:
+            return url.long_url
     return False

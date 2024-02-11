@@ -5,13 +5,24 @@
   <head>
     <title>URL Shortner</title>
     <link rel="stylesheet" href="{% static 'css/main.css' %}" type="text/css" />
+    <link rel="stylesheet" href="{% static 'css/fonts.css' %}" type="text/css" />
   </head>
   <body>
-    <div id="test"></div>
-    <form class="container" onsubmit="handleButtonClick(); return false;">
-      <input type="text" id="urlInput" placeholder="Enter URL" required/>
-      <button>Submit</button>
-    </form>
+    <div class="content">
+      <div class="up">
+        <h3>Make your damn link much <span class="shorter">shorter</span></h3>
+      </div>
+
+      <div class="form">
+        <form class="container" onsubmit="handleButtonClick(); return false;">
+          <input type="text" id="urlInput" placeholder="Enter URL" required />
+          <button>Shorter!</button>
+        </form>
+      </div>
+      <div id="result" class="invisible"></div>
+      <div id="link"><a href="http://"></a></div>
+    </div>
+
     <script>
       async function handleButtonClick() {
         let inputValue = document.getElementById('urlInput').value
@@ -22,12 +33,39 @@
         fetch('/shortener/', {
           method: 'POST',
           body: formData
-        }).then(async resp => {
-            let test = document.getElementById('test')
-            respjson = await resp.json()
-            console.log(respjson)
-            test.innerHTML = respjson.error_message
+        }).then(async (resp) => {
+          respjson = await resp.json();
+          console.log(respjson);
+          checkIfErrorOrSuccess(respjson)
         })
+      }
+
+      function checkIfErrorOrSuccess(respjson) { 
+          if (respjson.error_message)
+            renderResult( respjson, 'error', 'success', false)
+          else 
+            renderResult( respjson, 'success', 'error', true)
+          result.classList.remove('invisible');
+          setTimeout(() => {
+            result.classList.add('invisible');
+          }, 1800)
+      }
+
+      function renderResult( json, add, remove, success) {
+        const result = document.getElementById('result');
+        result.classList.add(add);
+        result.classList.remove(remove);
+        if (success) {
+          const link = document.getElementById('link');
+          result.innerHTML = json.success_message;
+          link.innerHTML = `
+            <a href="${json.short_url}">${json.short_url}</a>
+            <span>Link was copied to Clipboard</span>
+          ` 
+          navigator.clipboard.writeText(json.short_url);
+        } else {
+          result.innerHTML = json.error_message;
+        }
       }
     </script>
   </body>
