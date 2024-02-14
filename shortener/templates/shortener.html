@@ -16,11 +16,16 @@
       <div class="form">
         <form class="container" onsubmit="handleButtonClick(); return false;">
           <input type="text" id="urlInput" placeholder="Enter URL" required />
-          <button>Shorter!</button>
+          <button>Shorten!</button>
         </form>
       </div>
       <div id="result" class="invisible"></div>
-      <div id="link"><a href="http://"></a></div>
+      
+    </div>
+    <div id="link-box" class="content invisible">
+      <ul id="link">
+
+      </ul>
     </div>
 
     <script>
@@ -55,13 +60,14 @@
         const result = document.getElementById('result');
         result.classList.add(add);
         result.classList.remove(remove);
+        const linkBox = document.getElementById('link-box');
         if (success) {
           const link = document.getElementById('link');
           result.innerHTML = json.success_message;
-          link.innerHTML = `
-            <a href="${json.short_url}">${json.short_url}</a>
-            <span>Link was copied to Clipboard</span>
+          link.innerHTML += `
+            <li><a href="${json.short_url}" target=”_blank”>${json.short_url}</a></li>
           ` 
+          linkBox.classList.remove('invisible');
           navigator.clipboard.writeText(json.short_url);
         } else {
           result.innerHTML = json.error_message;
