@@ -5,26 +5,28 @@ import hashlib
 from urllib.parse import urlparse
 from django.http import JsonResponse
 
+DOMAIN = "http://www.otomay.com/"
+
 # Create your views here.
 def shortener(request):
     if request.method == 'POST':
-        # Request data auf vollständigkeit prüfen
+        json = {}
         if is_valid_url(request.POST['url']):
-            # Ist diese URL dem System schon bekannt?
             link = it_is_a_known_url(request.POST['url'])
             if not link:
                 short_url = generate_short_url(request.POST['url'])
                 Urls.objects.create(long_url = request.POST['url'], short_url = short_url)
-                json = {'success_message': 'created', "short_url": "http://www.otomay.com/" + short_url}
+                json['success_message'] = 'Link was copied to Clipboard'
+                json['short_url'] = DOMAIN + short_url
                 return JsonResponse(json)
             else:
-                print('known URL - Request data:', request.POST['url'])
-                json = {'success_message': 'A known URL', 'short_url': "http://www.otomay.com/" + link}
+                # print('known URL - Request data:', request.POST['url'])
+                json['success_message'] = 'A known URL'
+                json['short_url'] = DOMAIN + link
                 return JsonResponse(json)
         else:
-            print('Invalid URL - Request data:', request.POST['url'])
-            x = 'Invalid URL'
-            return JsonResponse({'error_message': x})
+            # print('Invalid URL - Request data:', request.POST['url'])
+            return JsonResponse({'error_message': 'Invalid URL'})
     return render(request, 'shortener.html')
 
 def forward(request, exception):
