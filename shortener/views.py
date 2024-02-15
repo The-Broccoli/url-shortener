@@ -5,9 +5,8 @@ import hashlib
 from urllib.parse import urlparse
 from django.http import JsonResponse
 
-DOMAIN = "http://www.otomay.com/"
+DOMAIN = "https://www.istfy.de.de/"
 
-# Create your views here.
 def shortener(request):
     if request.method == 'POST':
         json = {}
