@@ -5,7 +5,7 @@ import hashlib
 from urllib.parse import urlparse
 from django.http import JsonResponse
 
-DOMAIN = "https://www.istfy.de.de/"
+DOMAIN = "https://www.istfy.de/"
 
 def shortener(request):
     if request.method == 'POST':
